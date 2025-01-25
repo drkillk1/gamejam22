@@ -887,9 +887,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   start: {x: 0, y: 0}
-  walkLen: 10
-  iterations: 10
-  isRandom: 1
+  walkLen: 50
+  iterations: 50
+  isRandom: 0
   tileMapper: {fileID: 1938470866}
 --- !u!4 &1008333622
 Transform:
