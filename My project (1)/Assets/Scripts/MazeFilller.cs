@@ -23,11 +23,12 @@ public class MazeFilller : MonoBehaviour
     public void RunRandomWalk()
     {
         HashSet<Vector2Int> floorPositions = Walk();
+        //tileMapper.Clear();
         tileMapper.PaintFloor(floorPositions);
-        // foreach(var pos in floorPositions)
-        // {
-        //     Debug.Log(pos);
-        // }
+        //foreach(var pos in floorPositions)
+        //{
+        //    Debug.Log(pos);
+        //}
         
     }
 
