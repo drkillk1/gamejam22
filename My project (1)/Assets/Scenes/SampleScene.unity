@@ -1699,7 +1699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floor: {fileID: 22996444}
-  tileType: {fileID: 11400000, guid: 8f737618dae729b418afc666ba7b43c8, type: 2}
+  tileType: {fileID: 11400000, guid: 38f7764d0dd4d59419607491c4725dc2, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
