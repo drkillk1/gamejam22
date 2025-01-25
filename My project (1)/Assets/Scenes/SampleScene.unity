@@ -987,6 +987,7 @@ GameObject:
   - component: {fileID: 1232463020}
   - component: {fileID: 1232463023}
   - component: {fileID: 1232463024}
+  - component: {fileID: 1232463025}
   m_Layer: 0
   m_Name: Square
   m_TagString: Untagged
@@ -1134,6 +1135,22 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1232463025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232463019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 437fc5aaed41e7e4b8d14079ed5f512c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 8767671497739666861, guid: f205e068a71e4dc4d99c541247f813bc, type: 3}
+  gunOffset: {fileID: 1232463022}
+  timeBetweenShots: 1
+  bulletSpeed: 5
 --- !u!1 &1241911454
 GameObject:
   m_ObjectHideFlags: 0
@@ -1397,6 +1414,7 @@ GameObject:
   - component: {fileID: 1440729980}
   - component: {fileID: 1440729979}
   - component: {fileID: 1440729983}
+  - component: {fileID: 1440729984}
   m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
@@ -1525,6 +1543,41 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!58 &1440729984
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440729978}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &1535914734
 GameObject:
   m_ObjectHideFlags: 0
