@@ -6,24 +6,19 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class MazeFilller : MonoBehaviour
+public class MazeFilller : AbstractMazeGenerator
 {
     [Header("Base Parms")]
-    [SerializeField]
-    Vector2Int start = Vector2Int.zero;
     [SerializeField]
     int walkLen = 10;
     [SerializeField]
     int iterations = 10;
     [SerializeField]
     bool isRandom = true;
-    [SerializeField]
-    private TileMapper tileMapper;
 
-    public void RunRandomWalk()
+    protected override void RunRandomWalk()
     {
         HashSet<Vector2Int> floorPositions = Walk();
-        //tileMapper.Clear();
         tileMapper.PaintFloor(floorPositions);
         //foreach(var pos in floorPositions)
         //{

@@ -29,4 +29,9 @@ public class TileMapper : MonoBehaviour
         var tilepos = tilemap.WorldToCell((Vector3Int)tile);
         tilemap.SetTile(tilepos, type);
     }
+
+    public void Clear()
+    {
+        floor.ClearAllTiles();
+    }
 }
