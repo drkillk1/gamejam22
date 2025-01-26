@@ -76,31 +76,33 @@ public class GameManager : MonoBehaviour
         }
         if(player != null)
         {
-            Debug.Log(player.currentHealth);
+            // Debug.Log(player.currentHealth);
             if(player.currentHealth <= 0)
             {
                 
-                // losePanel = GameObject.Find("LoseScreen")?.gameObject;
-                // losePanel.SetActive(true);
+                
+                losePanel.SetActive(true);
 
-                if (losePanel == null) // Only find it if it's not already cached
-                {
-                    Transform canvas = GameObject.Find("Canvas")?.transform;
-
-                    if (canvas != null)
-                    {
-                        losePanel = canvas.Find("LoseScreen")?.gameObject; // Finds inactive children
-                    }
-
-                    if (losePanel == null)
-                    {
-                        Debug.LogError("LoseScreen not found under Canvas!");
-                        return;
-                    }
-                }
+                // if (losePanel == null) // Only find it if it's not already cached
+                // {
+                //     FindInactiveObjectByName("LoseScreen");
+                // }
             }
         }
         
+    }
+
+    private GameObject FindInactiveObjectByName(string name)
+    {
+        foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+        {
+            if (go.hideFlags == HideFlags.None && go.name == name)
+            {
+                return go;
+            }
+        }
+        Debug.Log("Couldnt find");
+        return null;
     }
 
     private void OnEnable()
@@ -140,21 +142,13 @@ public class GameManager : MonoBehaviour
         if(scene.name == "SampleScene")
         {
             player = GameObject.Find("Square")?.GetComponent<PlayerCtrl>();
-
-            // Cache the LoseScreen reference
-            Transform canvas = GameObject.Find("Canvas")?.transform;
-            if (canvas != null)
-            {
-                Transform loseScreenTransform = canvas.Find("LoseScreen");
-                if (loseScreenTransform != null)
-                {
-                    losePanel = loseScreenTransform.gameObject;
-                }
-                else
-                {
-                    Debug.LogError("LoseScreen not found under Canvas!");
-                }
-            }
+            losePanel = FindInactiveObjectByName("LoseScreen");
+            losePanel.SetActive(false);
+            winPanel = FindInactiveObjectByName("WinScreen");
+            winPanel.SetActive(false);
+            // BSPGenerator gen = GameObject.Find("BSPGenerator")?.GetComponent<BSPGenerator>();
+            MazeFilller gen = GameObject.Find("MazeGenerator")?.GetComponent<MazeFilller>();
+            gen.GenerateMaze();
         }
         
     }
@@ -194,5 +188,6 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    
 
 }
