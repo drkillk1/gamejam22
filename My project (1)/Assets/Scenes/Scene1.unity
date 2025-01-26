@@ -135,6 +135,22 @@ PrefabInstance:
       propertyPath: bulletPrefab
       value: 
       objectReference: {fileID: 7011228321730538125, guid: aaf6827921b57c949ac409449f36e85b, type: 3}
+    - target: {fileID: 5202434412699400644, guid: 5066cd35873d00343862823312a0d602, type: 3}
+      propertyPath: originalSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5202434412699400644, guid: 5066cd35873d00343862823312a0d602, type: 3}
+      propertyPath: rotationSpeed
+      value: 825
+      objectReference: {fileID: 0}
+    - target: {fileID: 5202434412699400644, guid: 5066cd35873d00343862823312a0d602, type: 3}
+      propertyPath: shootingInterval
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5202434412699400644, guid: 5066cd35873d00343862823312a0d602, type: 3}
+      propertyPath: originalRotationSpeed
+      value: 825
+      objectReference: {fileID: 0}
     - target: {fileID: 5681739130653969006, guid: 5066cd35873d00343862823312a0d602, type: 3}
       propertyPath: m_Name
       value: ShootingSpinningEnemy
@@ -796,6 +812,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChasingEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 2030500957679177512, guid: 09466b66972700147ba14c039b85983e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339981305206740667, guid: 09466b66972700147ba14c039b85983e, type: 3}
+      propertyPath: m_Radius
+      value: 1.28
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -976,7 +1000,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 719639446011747825, guid: 6870093d3c8a7544a8afbb24bd43a38c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1920644082049897314, guid: 6870093d3c8a7544a8afbb24bd43a38c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1020,12 +1044,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2241558925315917675, guid: 6870093d3c8a7544a8afbb24bd43a38c, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6770084433583824108, guid: 6870093d3c8a7544a8afbb24bd43a38c, type: 3}
       propertyPath: bulletPrefab
       value: 
       objectReference: {fileID: 7011228321730538125, guid: aaf6827921b57c949ac409449f36e85b, type: 3}
+    - target: {fileID: 6770084433583824108, guid: 6870093d3c8a7544a8afbb24bd43a38c, type: 3}
+      propertyPath: originalSpeed
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
