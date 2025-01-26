@@ -107,7 +107,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentAbility: 0
   maxHealth: 100
-  cam: {fileID: 0}
+  currentHealth: 0
+  cam: {fileID: 479900808727645478, guid: 7c6b58813e966e64c870d53238efee7f, type: 3}
   rotationSpeed: 10000
   speed: 5
   playerHealthBar: {fileID: 0}

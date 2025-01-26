@@ -78,44 +78,33 @@ public class BSPGenerator : MazeFilller
             Debug.LogWarning("PrefabPlacer is not assigned in the BSPGenerator!");
         }
 
-        SpawnPlayer(roomCenters, roomsList);
+        MovePlayerToFirstRoom(roomsList);
     }
 
-    private void SpawnPlayer(List<Vector2Int> roomCenters, List<BoundsInt> roomsList)
+    private void MovePlayerToFirstRoom(List<BoundsInt> roomsList)
     {
         if (playerPrefab == null)
         {
-            Debug.LogError("Player prefab is not assigned! Please assign a player prefab in the Inspector.");
+            Debug.LogError("Player object is not assigned! Please assign the player object in the Inspector.");
             return;
         }
-
-        Vector3 spawnPosition;
 
         // Check if there are any rooms
         if (roomsList == null || roomsList.Count == 0)
         {
-            Debug.LogWarning("No rooms available for player spawn! Using fallback position.");
-            spawnPosition = new Vector3(roomWidth / 2, roomHeight / 2, 0); // Fallback to maze center
-        }
-        else
-        {
-            // Use the center of the first room as the spawn point
-            BoundsInt firstRoom = roomsList[0];
-            spawnPosition = new Vector3(firstRoom.center.x, firstRoom.center.y, 0);
-            Debug.Log($"Player spawn position set to first room center: {spawnPosition}");
+            Debug.LogWarning("No rooms available to move the player! Using fallback position.");
+            playerPrefab.transform.position = new Vector3(roomWidth / 2, roomHeight / 2, 0); // Fallback to maze center
+            return;
         }
 
-        // Destroy the previously spawned player (if any)
-        if (spawnedPlayer != null)
-        {
-            Debug.Log("Destroying previously spawned player.");
-            DestroyImmediate(spawnedPlayer);
-        }
+        // Use the center of the first room as the spawn point
+        BoundsInt firstRoom = roomsList[0];
+        Vector3 newPlayerPosition = new Vector3(firstRoom.center.x, firstRoom.center.y, 0);
+        playerPrefab.transform.position = newPlayerPosition;
 
-        // Instantiate the player at the spawn position
-        spawnedPlayer = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
-        Debug.Log($"Player spawned at: {spawnPosition}");
+        Debug.Log($"Player moved to first room center: {newPlayerPosition}");
     }
+
 
 
 

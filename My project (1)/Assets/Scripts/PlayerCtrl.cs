@@ -58,6 +58,7 @@ public class PlayerCtrl : MonoBehaviour
 
     private void RotateInDirectionOfCursor()
     {
+       
         Vector3 mouseWorldPosition = cam.ScreenToWorldPoint(Input.mousePosition);
         Vector2 targetDirection = mouseWorldPosition - transform.position;
         targetDirection.Normalize();
