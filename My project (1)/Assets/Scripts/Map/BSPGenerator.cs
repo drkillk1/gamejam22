@@ -14,6 +14,11 @@ public class BSPGenerator : MazeFilller
     private int offset = 1;
     [SerializeField]
     private bool randomWalkRooms = false;
+
+    [SerializeField]
+    private GameObject playerPrefab; // Reference to the player prefab
+    private GameObject spawnedPlayer; // Track the spawned player instance
+
     
      // Reference to the PrefabPlacer
 
@@ -40,7 +45,9 @@ public class BSPGenerator : MazeFilller
         List<Vector2Int> roomCenters = new List<Vector2Int>();
         foreach (var roomL in roomsList)
         {
-            roomCenters.Add((Vector2Int)Vector3Int.RoundToInt(roomL.center));
+            var roomCenter = (Vector2Int)Vector3Int.RoundToInt(roomL.center);
+            roomCenters.Add(roomCenter);
+            Debug.Log($"Room center added: {roomCenter}");
         }
 
         HashSet<Vector2Int> corridors = ConnectRooms(roomCenters);
@@ -70,7 +77,48 @@ public class BSPGenerator : MazeFilller
         {
             Debug.LogWarning("PrefabPlacer is not assigned in the BSPGenerator!");
         }
+
+        SpawnPlayer(roomCenters, roomsList);
     }
+
+    private void SpawnPlayer(List<Vector2Int> roomCenters, List<BoundsInt> roomsList)
+    {
+        if (playerPrefab == null)
+        {
+            Debug.LogError("Player prefab is not assigned! Please assign a player prefab in the Inspector.");
+            return;
+        }
+
+        Vector3 spawnPosition;
+
+        // Check if there are any rooms
+        if (roomsList == null || roomsList.Count == 0)
+        {
+            Debug.LogWarning("No rooms available for player spawn! Using fallback position.");
+            spawnPosition = new Vector3(roomWidth / 2, roomHeight / 2, 0); // Fallback to maze center
+        }
+        else
+        {
+            // Use the center of the first room as the spawn point
+            BoundsInt firstRoom = roomsList[0];
+            spawnPosition = new Vector3(firstRoom.center.x, firstRoom.center.y, 0);
+            Debug.Log($"Player spawn position set to first room center: {spawnPosition}");
+        }
+
+        // Destroy the previously spawned player (if any)
+        if (spawnedPlayer != null)
+        {
+            Debug.Log("Destroying previously spawned player.");
+            DestroyImmediate(spawnedPlayer);
+        }
+
+        // Instantiate the player at the spawn position
+        spawnedPlayer = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        Debug.Log($"Player spawned at: {spawnPosition}");
+    }
+
+
+
 
     private HashSet<Vector2Int> CreateRoomsRandomly(List<BoundsInt> roomsList)
     {
