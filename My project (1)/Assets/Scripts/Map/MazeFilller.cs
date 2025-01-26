@@ -16,12 +16,18 @@ public class MazeFilller : AbstractMazeGenerator
         HashSet<Vector2Int> floorPositions = Walk(mapParms,start);
         tileMapper.PaintFloor(floorPositions);
         WallGenerator.CreateWalls(floorPositions, tileMapper);
+        
+        
         ///new
         // Identify the room floor (no corridors, if applicable)
         HashSet<Vector2Int> noCorridorPositions = new HashSet<Vector2Int>(floorPositions); // Adjust for your corridor logic if needed
 
         // Initialize the ItemPlacementHelper
         ItemPlacementHelper placementHelper = new ItemPlacementHelper(floorPositions, noCorridorPositions);
+        if (placementHelper == null)
+        {
+            Debug.LogError("ItemPlacementHelper failed to initialize.");
+        }
 
         // Place prefabs (items and enemies)
         PrefabPlacer prefabPlacer = GetComponent<PrefabPlacer>();
@@ -29,6 +35,7 @@ public class MazeFilller : AbstractMazeGenerator
         {
             prefabPlacer.PlacePrefabs(floorPositions, noCorridorPositions);
         }
+        //new
             
     }
 

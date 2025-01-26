@@ -26,8 +26,12 @@ public class PrefabPlacer : MonoBehaviour
 
                 if (position.HasValue)
                 {
+                    Debug.Log($"Spawning {entry.prefab.name} at {position.Value}");
                     Vector3 worldPosition = new Vector3(position.Value.x, position.Value.y, 0);
                     Instantiate(entry.prefab, worldPosition, Quaternion.identity);
+                }
+                else{
+                    Debug.LogWarning($"Failed to find a position for {entry.prefab.name}");
                 }
             }
         }

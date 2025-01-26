@@ -34,6 +34,7 @@ public class ItemPlacementHelper
 
     public Vector2? GetItemPlacementPosition(PlacementType placementType, int iterationsMax, Vector2Int size, bool addOffset)
     {
+        Debug.Log($"Attempting to find position for item of size {size} in {tileByType[placementType].Count} tiles.");
         int itemArea = size.x * size.y;
         if(tileByType[placementType].Count < itemArea)
         {

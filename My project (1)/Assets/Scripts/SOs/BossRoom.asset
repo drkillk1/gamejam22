@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemies:
   - prefab: {fileID: 5681739130653969006, guid: 5066cd35873d00343862823312a0d602, type: 3}
-    quantity: 1
+    quantity: 5
     size: {x: 1, y: 1}
   items: []
