@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class PlayerShoot : MonoBehaviour
 {
-    public GameObject bulletPrefab; // The bullet to shoot
+    public GameObject normalBubblePrefab; // Prefab for normal bubble
+    public GameObject fireBubblePrefab; // Prefab for fire bubble
+    public GameObject iceBubblePrefab; // Prefab for ice bubble
     public Transform gunOffset; // The position to shoot from
     public float minChargeTime = 0.2f; // Minimum charge time for a small bullet
     public float maxChargeTime = 1.5f; // Maximum charge time for the largest bullet
@@ -18,7 +20,13 @@ public class PlayerShoot : MonoBehaviour
 
     private bool isCharging = false; // Whether the player is holding the fire button
     private float chargeStartTime = 0f; // When the charging started
-    private GameObject currentBullet = null; // Reference to the growing bullet
+    private GameObject currentBubble = null; // Reference to the growing bubble
+
+    public enum BubbleType { 
+        Normal = 0, 
+        Fire = 1, 
+        Ice = 2 }
+    public BubbleType currentBubbleType = BubbleType.Normal; // The currently selected bubble type
 
     void Start()
     {
@@ -32,6 +40,8 @@ public class PlayerShoot : MonoBehaviour
 
     void Update()
     {
+        HandleAbilitySwitching();
+
         if (isCharging)
         {
             float chargeTime = Mathf.Min(Time.time - chargeStartTime, maxChargeTime); // Cap at max charge time
@@ -43,8 +53,8 @@ public class PlayerShoot : MonoBehaviour
                 UpdateChargeBarColor(chargeTime);
             }
 
-            // Update the size and position of the bullet if it exists
-            if (currentBullet != null)
+            // Update the size and position of the bubble if it exists
+            if (currentBubble != null)
             {
                 UpdateBulletSize(chargeTime);
                 UpdateBulletPosition();
@@ -52,29 +62,51 @@ public class PlayerShoot : MonoBehaviour
         }
     }
 
+    private void HandleAbilitySwitching()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            currentBubbleType = BubbleType.Normal;
+            Debug.Log("Switched to Normal Bubble");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            currentBubbleType = BubbleType.Fire;
+            Debug.Log("Switched to Fire Bubble");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            currentBubbleType = BubbleType.Ice;
+            Debug.Log("Switched to Ice Bubble");
+        }
+    }
+
+
     private void FireBullet(float chargeTime)
     {
-        if (currentBullet != null)
+        if (currentBubble != null)
         {
             float chargeRatio = Mathf.Clamp01((chargeTime - minChargeTime) / (maxChargeTime - minChargeTime));
             float bulletSpeed = Mathf.Lerp(maxBulletSpeed, minBulletSpeed, chargeRatio); // Speed inversely proportional to charge
 
-            // Mark the bullet as fired
-            Bubble bubble = currentBullet.GetComponent<Bubble>();
+            // Mark the bubble as fired
+            Bubble bubble = currentBubble.GetComponent<Bubble>();
             if (bubble != null)
             {
-                bubble.SetIsCharged(true); // Set the bullet to a "fired" state
+                bubble.SetIsCharged(true); // Set the bubble to a "fired" state
+                bubble.bubbleType = (Bubble.BubbleType)currentBubbleType; // Assign the correct bubble type
+                Debug.Log($"Fired a {bubble.bubbleType} bubble.");
             }
 
-            // Shoot the bullet
-            Rigidbody2D rb = currentBullet.GetComponent<Rigidbody2D>();
+            // Shoot the bubble
+            Rigidbody2D rb = currentBubble.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
                 rb.isKinematic = false; // Allow physics-based movement
                 rb.velocity = bulletSpeed * gunOffset.up; // Shoot the bullet
             }
 
-            currentBullet = null; // Reset the current bullet reference
+            currentBubble = null; // Reset the current bubble reference
         }
 
         // Reset the charge bar
@@ -84,7 +116,29 @@ public class PlayerShoot : MonoBehaviour
         }
     }
 
+    private GameObject GetBubblePrefab()
+    {
+        GameObject selectedPrefab = null;
 
+        switch (currentBubbleType)
+        {
+            case BubbleType.Fire:
+                selectedPrefab = fireBubblePrefab;
+                break;
+            case BubbleType.Ice:
+                selectedPrefab = iceBubblePrefab;
+                break;
+            case BubbleType.Normal:
+                selectedPrefab = normalBubblePrefab;
+                break;
+            default:
+                Debug.LogWarning("Unknown bubble type!");
+                break;
+        }
+
+        Debug.Log($"Selected prefab: {selectedPrefab?.name} for type: {currentBubbleType}");
+        return selectedPrefab;
+    }
 
 
     private void UpdateChargeBarColor(float chargeTime)
@@ -98,30 +152,29 @@ public class PlayerShoot : MonoBehaviour
     }
 
     private void UpdateBulletSize(float chargeTime)
-{
-    float chargeRatio = Mathf.Clamp01(chargeTime / maxChargeTime);
-    float bulletSize = Mathf.Lerp(initialBulletSize, bulletSizeMultiplier, Mathf.Pow(chargeRatio, 2)); // Exponential growth
-
-    // Set the size of the bullet
-    currentBullet.transform.localScale = Vector3.one * bulletSize;
-
-    // Check if the bullet reaches maximum size
-    if (chargeTime >= maxChargeTime)
     {
-        // "Pop" the bullet (destroy it)
-        Destroy(currentBullet);
-        currentBullet = null;
-        Debug.Log("Bullet popped! Charge too long.");
-    }
-}
+        float chargeRatio = Mathf.Clamp01(chargeTime / maxChargeTime);
+        float bulletSize = Mathf.Lerp(initialBulletSize, bulletSizeMultiplier, Mathf.Pow(chargeRatio, 2)); // Exponential growth
 
+        // Set the size of the bullet
+        currentBubble.transform.localScale = Vector3.one * bulletSize;
+
+        // Check if the bullet reaches maximum size
+        if (chargeTime >= maxChargeTime)
+        {
+            // "Pop" the bullet (destroy it)
+            Destroy(currentBubble);
+            currentBubble = null;
+            Debug.Log("Bullet popped! Charge too long.");
+        }
+    }
 
     private void UpdateBulletPosition()
     {
-        if (currentBullet != null && gunOffset != null)
+        if (currentBubble != null && gunOffset != null)
         {
-            currentBullet.transform.position = gunOffset.position;
-            currentBullet.transform.rotation = gunOffset.rotation;
+            currentBubble.transform.position = gunOffset.position;
+            currentBubble.transform.rotation = gunOffset.rotation;
         }
     }
 
@@ -133,19 +186,26 @@ public class PlayerShoot : MonoBehaviour
             isCharging = true;
             chargeStartTime = Time.time;
 
-            // Instantiate the bullet in front of the player
-            if (currentBullet == null)
+            // Instantiate the bubble in front of the player
+            if (currentBubble == null)
             {
-                currentBullet = Instantiate(bulletPrefab, gunOffset.position, gunOffset.rotation);
-
-                Rigidbody2D rb = currentBullet.GetComponent<Rigidbody2D>();
-                if (rb != null)
+                GameObject bubblePrefab = GetBubblePrefab(); // Dynamically get the appropriate prefab
+                if (bubblePrefab == null)
                 {
-                    rb.isKinematic = true; // Prevent the bullet from moving while charging
+                    Debug.LogWarning("No bubble prefab found for the current bubble type!");
+                    return;
                 }
 
-                // Start with a smaller bullet size
-                currentBullet.transform.localScale = Vector3.one * initialBulletSize;
+                currentBubble = Instantiate(bubblePrefab, gunOffset.position, gunOffset.rotation);
+
+                Rigidbody2D rb = currentBubble.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    rb.isKinematic = true; // Prevent the bubble from moving while charging
+                }
+
+                // Start with a smaller bubble size
+                currentBubble.transform.localScale = Vector3.one * initialBulletSize;
             }
         }
         else
@@ -157,21 +217,22 @@ public class PlayerShoot : MonoBehaviour
 
                 float chargeTime = Mathf.Min(Time.time - chargeStartTime, maxChargeTime); // Cap at max charge time
 
-                if (currentBullet != null && chargeTime <= maxChargeTime)
+                if (currentBubble != null && chargeTime <= maxChargeTime)
                 {
-                    // Shoot the bullet
+                    // Shoot the bubble
                     FireBullet(chargeTime);
                 }
                 else
                 {
-                    // Destroy the bullet if it's still present but not shot
-                    if (currentBullet != null)
+                    // Destroy the bubble if it's still present but not shot
+                    if (currentBubble != null)
                     {
-                        Destroy(currentBullet);
+                        Destroy(currentBubble);
                         Debug.Log("Bullet not fired and destroyed.");
                     }
                 }
             }
         }
     }
+
 }

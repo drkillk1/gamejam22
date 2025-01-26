@@ -8,7 +8,10 @@ public class EnemyCtrl : MonoBehaviour
     public float speed;
     public float rotationSpeed;
     public float maxHealth = 50f; // Maximum health for the enemy
-    private float currentHealth;
+    public float currentHealth;
+    public float originalSpeed = 2f;
+
+    public float freezeDuration = 2f;
 
     private Rigidbody2D rb;
     private PlayerAwarenessController playerAwarenessController;
@@ -25,6 +28,7 @@ public class EnemyCtrl : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         playerAwarenessController = GetComponent<PlayerAwarenessController>();
         currentHealth = maxHealth; // Initialize enemy health
+        originalSpeed = speed; // Store the original speed
 
         if (healthBar != null)
         {
@@ -77,6 +81,59 @@ public class EnemyCtrl : MonoBehaviour
         {
             rb.velocity = transform.up * speed;
         }
+    }
+
+    public void Freeze(bool isFrozen)
+    {
+        if (isFrozen)
+        {
+            speed = 0f; // Stop movement
+            Debug.Log("Enemy frozen!");
+        }
+        else
+        {
+            speed = originalSpeed; // Restore original movement speed
+            Debug.Log("Enemy unfrozen!");
+        }
+    }
+
+    public IEnumerator ApplyFreezeEffect(EnemyCtrl enemy)
+    {
+        Debug.Log("Freezing enemy...");
+        enemy.Freeze(true); // Freeze the enemy
+        Debug.Log($"Waiting for {freezeDuration} seconds...");
+        yield return new WaitForSeconds(freezeDuration); // Wait for freeze duration
+
+        Debug.Log("Unfreezing enemy...");
+        enemy.Freeze(false); // Unfreeze the enemy
+        Debug.Log("Enemy unfrozen!");
+    }
+
+        public void ApplyBurnEffect(float totalDamage, int burnTicks, float tickInterval)
+    {
+        StartCoroutine(TakeBurnDamage(totalDamage, burnTicks, tickInterval));
+    }
+
+    private IEnumerator TakeBurnDamage(float totalDamage, int burnTicks, float tickInterval)
+    {
+        Debug.Log($"Enemy burning for {totalDamage} total damage over {burnTicks} ticks.");
+        float damagePerTick = totalDamage / burnTicks;
+
+        for (int i = 0; i < burnTicks; i++)
+        {
+            if (currentHealth <= 0)
+            {
+                Debug.Log("Enemy already dead during burn effect. Stopping burn.");
+                yield break;
+            }
+
+            TakeDamage(damagePerTick);
+            Debug.Log($"Burn tick {i + 1}/{burnTicks}: {damagePerTick} damage applied. Current health: {currentHealth}");
+
+            yield return new WaitForSeconds(tickInterval); // Wait for the next tick
+        }
+
+        Debug.Log("Burn effect ended.");
     }
 
     public void TakeDamage(float damage)

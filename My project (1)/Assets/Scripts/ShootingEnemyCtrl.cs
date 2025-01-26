@@ -8,7 +8,9 @@ public class ShootingEnemyCtrl : MonoBehaviour
     public float speed;
     public float rotationSpeed;
     public float maxHealth = 50f; // Maximum health for the enemy
-    private float currentHealth;
+    public float currentHealth;
+
+    public float originalSpeed;
 
     private Rigidbody2D rb;
     private Transform playerTransform;
@@ -23,6 +25,8 @@ public class ShootingEnemyCtrl : MonoBehaviour
     private Quaternion fixedRotation; // Fixed rotation for the health bar
 
     private bool isAlive = true; // Tracks if the enemy is alive
+
+    private bool canShoot = true; // Controls whether the enemy can shoot
 
     private void Awake()
     {
@@ -58,6 +62,8 @@ public class ShootingEnemyCtrl : MonoBehaviour
         UpdateHealthBarPosition();
     }
 
+    
+
     private void MoveTowardsPlayer()
     {
         if (playerTransform == null) return;
@@ -73,13 +79,59 @@ public class ShootingEnemyCtrl : MonoBehaviour
         rb.velocity = transform.up * speed;
     }
 
+    public void Freeze(bool isFrozen)
+    {
+        if (isFrozen)
+        {
+            canShoot = false; // Stop shooting
+            speed = 0f; // Stop movement
+            Debug.Log("Shooting enemy frozen!");
+        }
+        else
+        {
+            canShoot = true; // Resume shooting
+            speed = originalSpeed; // Restore original movement speed
+            Debug.Log("Shooting enemy unfrozen!");
+        }
+    }
+
+    public void ApplyBurnEffect(float totalDamage, int burnTicks, float tickInterval)
+    {
+        StartCoroutine(TakeBurnDamage(totalDamage, burnTicks, tickInterval));
+    }
+
+    private IEnumerator TakeBurnDamage(float totalDamage, int burnTicks, float tickInterval)
+    {
+        Debug.Log($"Shooting enemy burning for {totalDamage} total damage over {burnTicks} ticks.");
+        float damagePerTick = totalDamage / burnTicks;
+
+        for (int i = 0; i < burnTicks; i++)
+        {
+            if (currentHealth <= 0)
+            {
+                Debug.Log("Shooting enemy already dead during burn effect. Stopping burn.");
+                yield break;
+            }
+
+            TakeDamage(damagePerTick);
+            Debug.Log($"Burn tick {i + 1}/{burnTicks}: {damagePerTick} damage applied. Current health: {currentHealth}");
+
+            yield return new WaitForSeconds(tickInterval); // Wait for the next tick
+        }
+
+        Debug.Log("Shooting enemy burn effect ended.");
+    }
+
+
+
     private IEnumerator ShootAtPlayer()
     {
         while (isAlive)
         {
-            Debug.Log("Shooting at player...");
-            if (playerTransform != null && bulletPrefab != null && firePoint != null)
+            if (canShoot && playerTransform != null && bulletPrefab != null && firePoint != null)
             {
+                Debug.Log("Shooting at player...");
+                
                 // Instantiate and shoot the bullet
                 GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
                 Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
@@ -94,6 +146,12 @@ public class ShootingEnemyCtrl : MonoBehaviour
         }
 
         Debug.Log("Shooting coroutine ended.");
+    }
+
+    public void SetCanShoot(bool value)
+    {
+        canShoot = value;
+        Debug.Log($"ShootingEnemy canShoot set to: {canShoot}");
     }
 
     public void TakeDamage(float damage)
@@ -130,6 +188,8 @@ public class ShootingEnemyCtrl : MonoBehaviour
         // Destroy the enemy GameObject
         Destroy(gameObject);
     }
+
+    
 
     private void UpdateHealthBarPosition()
     {

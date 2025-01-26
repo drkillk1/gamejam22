@@ -105,11 +105,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0db658af36add0c479698c3aaf3b7a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentAbility: 0
   maxHealth: 100
   cam: {fileID: 0}
   rotationSpeed: 10000
   speed: 5
   playerHealthBar: {fileID: 0}
+  abilityDisplayText: {fileID: 0}
 --- !u!50 &5850532591108223105
 Rigidbody2D:
   serializedVersion: 4
@@ -179,7 +181,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 437fc5aaed41e7e4b8d14079ed5f512c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 6976417696934828522, guid: a37d91798d70e64458a8c3b66a394ea2, type: 3}
+  normalBubblePrefab: {fileID: 0}
+  fireBubblePrefab: {fileID: 0}
+  iceBubblePrefab: {fileID: 0}
   gunOffset: {fileID: 8567954940067656009}
   minChargeTime: 0.1
   maxChargeTime: 0.8
@@ -189,6 +193,7 @@ MonoBehaviour:
   initialBulletSize: 0.1
   chargeBar: {fileID: 7022490775238903151}
   chargeBarFill: {fileID: 9013473141971732084}
+  currentBubbleType: 0
 --- !u!114 &2502170639711952487
 MonoBehaviour:
   m_ObjectHideFlags: 0

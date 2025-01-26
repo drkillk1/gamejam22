@@ -7,8 +7,10 @@ public class SpinningShootingEnemyCtrl : MonoBehaviour
 {
     public float speed; // Speed at which the enemy moves
     public float rotationSpeed = 360f; // Degrees per second for spinning
+    public float originalSpeed = 5f;
+    public float originalRotationSpeed = 360f;
     public float maxHealth = 50f; // Maximum health for the enemy
-    private float currentHealth;
+    public float currentHealth;
 
     private Rigidbody2D rb;
     private Transform playerTransform;
@@ -70,11 +72,13 @@ public class SpinningShootingEnemyCtrl : MonoBehaviour
         transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
     }
 
+    private bool canShoot = true; // Controls whether the enemy can shoot
+
     private IEnumerator ShootWhileSpinning()
     {
         while (isAlive)
         {
-            if (bulletPrefab != null && firePoint != null)
+            if (canShoot && bulletPrefab != null && firePoint != null)
             {
                 // Instantiate and shoot the bullet
                 GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
@@ -88,6 +92,13 @@ public class SpinningShootingEnemyCtrl : MonoBehaviour
             yield return new WaitForSeconds(shootingInterval); // Wait before shooting again
         }
     }
+
+    public void SetCanShoot(bool value)
+    {
+        canShoot = value;
+        Debug.Log($"SpinningShootingEnemy canShoot set to: {canShoot}");
+    }
+
 
     public void TakeDamage(float damage)
     {
@@ -104,6 +115,53 @@ public class SpinningShootingEnemyCtrl : MonoBehaviour
             Die();
         }
     }
+
+    public void Freeze(bool isFrozen)
+    {
+        if (isFrozen)
+        {
+            SetCanShoot(false);
+            speed = 0f; // Stop movement
+            rotationSpeed = 0f; // Stop spinning
+            Debug.Log("Spinning shooting enemy frozen!");
+        }
+        else
+        {
+            SetCanShoot(true);
+            speed = originalSpeed; // Restore movement speed
+            rotationSpeed = originalRotationSpeed; // Restore spinning speed
+            Debug.Log("Spinning shooting enemy unfrozen!");
+        }
+    }
+
+    
+    public void ApplyBurnEffect(float totalDamage, int burnTicks, float tickInterval)
+    {
+        StartCoroutine(TakeBurnDamage(totalDamage, burnTicks, tickInterval));
+    }
+
+    private IEnumerator TakeBurnDamage(float totalDamage, int burnTicks, float tickInterval)
+    {
+        Debug.Log($"Shooting enemy burning for {totalDamage} total damage over {burnTicks} ticks.");
+        float damagePerTick = totalDamage / burnTicks;
+
+        for (int i = 0; i < burnTicks; i++)
+        {
+            if (currentHealth <= 0)
+            {
+                Debug.Log("Shooting enemy already dead during burn effect. Stopping burn.");
+                yield break;
+            }
+
+            TakeDamage(damagePerTick);
+            Debug.Log($"Burn tick {i + 1}/{burnTicks}: {damagePerTick} damage applied. Current health: {currentHealth}");
+
+            yield return new WaitForSeconds(tickInterval); // Wait for the next tick
+        }
+
+        Debug.Log("Shooting enemy burn effect ended.");
+    }
+
 
     private void Die()
     {

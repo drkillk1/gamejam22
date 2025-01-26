@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class PlayerCtrl : MonoBehaviour
 {
+    public enum AbilityType { Normal, Fire, Ice }
+    public AbilityType currentAbility = AbilityType.Normal;
+
     public float maxHealth = 100f;
     private float currentHealth;
 
@@ -19,6 +22,7 @@ public class PlayerCtrl : MonoBehaviour
     public float speed;
 
     public Slider playerHealthBar; // Player health bar slider
+    public Text abilityDisplayText; // UI Text element to display the current ability
 
     void Start()
     {
@@ -30,12 +34,15 @@ public class PlayerCtrl : MonoBehaviour
             playerHealthBar.maxValue = maxHealth;
             playerHealthBar.value = currentHealth;
         }
+
+        UpdateAbilityUI();
     }
 
     void Update()
     {
         SetPlayerVelocity();
         RotateInDirectionOfCursor();
+        HandleAbilitySwitching();
     }
 
     private void SetPlayerVelocity()
@@ -59,6 +66,19 @@ public class PlayerCtrl : MonoBehaviour
         var rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
         rb.MoveRotation(rotation);
+    }
+
+    public void Heal(float amount)
+    {
+        currentHealth += amount; // Increase health
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // Prevent overhealing
+        Debug.Log($"Player healed! Current health: {currentHealth}");
+
+        // Update the health bar UI
+        if (playerHealthBar != null)
+        {
+            playerHealthBar.value = currentHealth;
+        }
     }
 
     private void OnMove(InputValue inputValue)
@@ -86,5 +106,34 @@ public class PlayerCtrl : MonoBehaviour
     {
         Debug.Log("Player Died!");
         // Implement respawn or game over logic here
+    }
+
+    private void HandleAbilitySwitching()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            currentAbility = AbilityType.Normal;
+            Debug.Log("Switched to Normal Ability");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            currentAbility = AbilityType.Fire;
+            Debug.Log("Switched to Fire Ability");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            currentAbility = AbilityType.Ice;
+            Debug.Log("Switched to Ice Ability");
+        }
+
+        UpdateAbilityUI();
+    }
+
+    private void UpdateAbilityUI()
+    {
+        if (abilityDisplayText != null)
+        {
+            abilityDisplayText.text = $"Ability: {currentAbility}";
+        }
     }
 }
