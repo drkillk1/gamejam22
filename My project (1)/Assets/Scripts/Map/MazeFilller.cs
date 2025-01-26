@@ -8,18 +8,14 @@ using Random = UnityEngine.Random;
 
 public class MazeFilller : AbstractMazeGenerator
 {
-    [Header("Base Parms")]
     [SerializeField]
-    int walkLen = 10;
-    [SerializeField]
-    int iterations = 10;
-    [SerializeField]
-    bool isRandom = true;
+    MapSO MapParms;
 
     protected override void RunRandomWalk()
     {
-        HashSet<Vector2Int> floorPositions = Walk();
+        HashSet<Vector2Int> floorPositions = Walk(MapParms,start);
         tileMapper.PaintFloor(floorPositions);
+        WallGenerator.CreateWalls(floorPositions, tileMapper);
         //foreach(var pos in floorPositions)
         //{
         //    Debug.Log(pos);
@@ -27,15 +23,15 @@ public class MazeFilller : AbstractMazeGenerator
         
     }
 
-    protected HashSet<Vector2Int> Walk()
+    protected HashSet<Vector2Int> Walk(MapSO parms, Vector2Int pos)
     {
-        var curPos = start;
+        var curPos = pos;
         HashSet<Vector2Int> floorPositions = new HashSet<Vector2Int>();
-        for(int i = 0; i < iterations; i++)
+        for(int i = 0; i < parms.iterations; i++)
         {
-            var path = RandomWalkMazeGenerator.SimpleRandomWalk(curPos, walkLen);
+            var path = RandomWalkMazeGenerator.SimpleRandomWalk(curPos, parms.walkLen);
             floorPositions.UnionWith(path);
-            if(isRandom)
+            if(parms.isRandom)
             {
                 curPos = floorPositions.ElementAt(Random.Range(0,floorPositions.Count()));
             }

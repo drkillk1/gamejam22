@@ -8,30 +8,43 @@ public class TileMapper : MonoBehaviour
 {
     [SerializeField]
     private Tilemap floor;
+
     [SerializeField]
-    private TileBase tileType;
+    private Tilemap walls;
+    [SerializeField]
+    private TileBase floorTileType;
+    [SerializeField]
+    private TileBase wallTileType;
 
     public void PaintFloor(IEnumerable<Vector2Int> floorPos)
     {
-        PaintTile(floorPos, floor, tileType);
+        PaintTiles(floorPos, floor, floorTileType);
     }
 
-    public void PaintTile(IEnumerable<Vector2Int> tiles, Tilemap tilemap, TileBase type)
+    public void PaintTiles(IEnumerable<Vector2Int> tiles, Tilemap tilemap, TileBase type)
     {
         foreach(var tile in tiles)
         {
-            Paint(tilemap, type, tile);
+            PaintTile(tilemap, type, tile);
         }
     }
 
-    private void Paint(Tilemap tilemap, TileBase type, Vector2Int tile)
+    public void PaintWallTiles(Vector2Int tile)
+    {
+        PaintTile(walls, wallTileType, tile);
+    }
+
+    private void PaintTile(Tilemap tilemap, TileBase type, Vector2Int tile)
     {
         var tilepos = tilemap.WorldToCell((Vector3Int)tile);
         tilemap.SetTile(tilepos, type);
     }
 
+    
+
     public void Clear()
     {
         floor.ClearAllTiles();
+        walls.ClearAllTiles();
     }
 }

@@ -19,6 +19,21 @@ public static class RandomWalkMazeGenerator
         
         return path;
     }
+
+    public static List<Vector2Int> RandomWalkCorridor(Vector2Int start, int corridorLen)
+    {
+        List<Vector2Int> corridorPath = new List<Vector2Int>();
+        var direction = CardDirections.GetRandDir();
+        Vector2Int curPos = start;
+        corridorPath.Add(curPos);
+        for(int i = 0; i < corridorLen; i++)
+        {
+            curPos += direction;
+            corridorPath.Add(curPos);
+        }
+        return corridorPath;
+    }
+    
 }
 
 
