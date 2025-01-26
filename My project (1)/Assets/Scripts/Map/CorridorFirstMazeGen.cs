@@ -14,8 +14,6 @@ public class CorridorFirstMazeGen : MazeFilller
     [SerializeField]
     [Range(0.1f, 1)]
     private float roomPercent = 0.8f;
-    [SerializeField]
-    MapSO mapParms;
 
     protected override void RunRandomWalk()
     {
@@ -71,7 +69,7 @@ public class CorridorFirstMazeGen : MazeFilller
             if(roomFloors.Contains(pos) == false)
             {
                 var roomFloor = Walk(mapParms, pos);
-                roomFloor.UnionWith(roomFloors);
+                roomFloors.UnionWith(roomFloor);
             }
         }
     }
