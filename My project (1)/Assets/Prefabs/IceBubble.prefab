@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bubbleType: 2
-  baseDamage: 2
+  baseDamage: 4
   damageMultiplier: 2
   burnDamage: 5
   burnDuration: 3
