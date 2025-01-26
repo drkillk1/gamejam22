@@ -26,6 +26,10 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
+        if (cam == null)
+        {
+            cam = Camera.main;
+        }
         rb = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth; // Initialize player health
 
@@ -43,6 +47,7 @@ public class PlayerCtrl : MonoBehaviour
         SetPlayerVelocity();
         RotateInDirectionOfCursor();
         HandleAbilitySwitching();
+        Debug.Log($"Player position now: {transform.position}");
     }
 
     private void SetPlayerVelocity()
@@ -62,6 +67,11 @@ public class PlayerCtrl : MonoBehaviour
         Vector3 mouseWorldPosition = cam.ScreenToWorldPoint(Input.mousePosition);
         Vector2 targetDirection = mouseWorldPosition - transform.position;
         targetDirection.Normalize();
+
+        Debug.Log($"Scene: {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
+        Debug.Log($"Mouse World Position: {mouseWorldPosition}");
+        Debug.Log($"Player Position: {transform.position}");
+        Debug.Log($"Target Direction: {targetDirection}");
 
         Quaternion targetRotation = Quaternion.LookRotation(transform.forward, targetDirection);
         var rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);

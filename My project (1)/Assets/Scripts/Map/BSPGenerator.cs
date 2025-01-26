@@ -103,6 +103,7 @@ public class BSPGenerator : MazeFilller
         playerPrefab.transform.position = newPlayerPosition;
 
         Debug.Log($"Player moved to first room center: {newPlayerPosition}");
+        Debug.Log($"Player position after spawning: {playerPrefab.transform.position}");
     }
 
 
