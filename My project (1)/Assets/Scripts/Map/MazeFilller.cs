@@ -9,11 +9,11 @@ using Random = UnityEngine.Random;
 public class MazeFilller : AbstractMazeGenerator
 {
     [SerializeField]
-    MapSO MapParms;
+    protected MapSO mapParms;
 
     protected override void RunRandomWalk()
     {
-        HashSet<Vector2Int> floorPositions = Walk(MapParms,start);
+        HashSet<Vector2Int> floorPositions = Walk(mapParms,start);
         tileMapper.PaintFloor(floorPositions);
         WallGenerator.CreateWalls(floorPositions, tileMapper);
         //foreach(var pos in floorPositions)
