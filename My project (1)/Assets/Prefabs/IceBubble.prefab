@@ -140,7 +140,7 @@ MonoBehaviour:
   burnDamage: 5
   burnDuration: 3
   freezeDuration: 2
-  effectSizeThreshold: 0.4
+  effectSizeThreshold: 0.07
 --- !u!50 &6654657775550438691
 Rigidbody2D:
   serializedVersion: 4

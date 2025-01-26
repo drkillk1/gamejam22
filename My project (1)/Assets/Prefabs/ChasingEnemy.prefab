@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4869836666663559737}
   - component: {fileID: 3339981305206740667}
   - component: {fileID: 2159399095232620563}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ChasingEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,8 +32,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.65, y: 6.58, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1251110744059598227}
   m_Father: {fileID: 0}
@@ -102,14 +102,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8d3b105cd228ca4fb797020c4c1ecfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4
+  speed: 2
   rotationSpeed: 5000
   maxHealth: 42
-  originalSpeed: 4
+  currentHealth: 0
+  originalSpeed: 2
   freezeDuration: 2
   attackDamage: 50
   healthBar: {fileID: 7293335686472860897}
-  healthBarOffset: {x: 0, y: 1.5, z: 0}
+  healthBarOffset: {x: 0, y: 0.3, z: 0}
 --- !u!114 &9093780554089743457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,7 +180,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -198,7 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chargeBarCanvas: {fileID: 8760408500967320968}
-  offset: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0.3, z: 0}
 --- !u!1 &3552319838163154028
 GameObject:
   m_ObjectHideFlags: 0

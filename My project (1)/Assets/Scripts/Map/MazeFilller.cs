@@ -11,9 +11,13 @@ public class MazeFilller : AbstractMazeGenerator
     [SerializeField]
     protected MapSO mapParms;
 
+    
+
+
     protected override void RunRandomWalk()
     {
         HashSet<Vector2Int> floorPositions = Walk(mapParms,start);
+        Debug.Log($"Floor positions count: {floorPositions.Count}");
         tileMapper.PaintFloor(floorPositions);
         WallGenerator.CreateWalls(floorPositions, tileMapper);
         
@@ -21,11 +25,13 @@ public class MazeFilller : AbstractMazeGenerator
         ///new
         // Identify the room floor (no corridors, if applicable)
         HashSet<Vector2Int> noCorridorPositions = new HashSet<Vector2Int>(floorPositions); // Adjust for your corridor logic if needed
+        Debug.Log($"No-corridor positions count: {noCorridorPositions.Count}");
 
         // Initialize the ItemPlacementHelper
         ItemPlacementHelper placementHelper = new ItemPlacementHelper(floorPositions, noCorridorPositions);
         if (placementHelper == null)
         {
+            
             Debug.LogError("ItemPlacementHelper failed to initialize.");
         }
 
@@ -35,11 +41,18 @@ public class MazeFilller : AbstractMazeGenerator
         if (prefabPlacer != null)
         {
             Debug.LogError("ItemPlacementHelper failed to initialize.");
+            prefabPlacer.SetItemPlacementHelper(placementHelper);
             prefabPlacer.PlacePrefabs(floorPositions, noCorridorPositions);
+        }
+        else
+        {
+            Debug.LogError("PrefabPlacer component is missing from this GameObject.");
         }
         //new
             
     }
+
+    
 
     protected HashSet<Vector2Int> Walk(MapSO parms, Vector2Int pos)
     {

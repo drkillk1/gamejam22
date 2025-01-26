@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 9043215493485891775}
   - component: {fileID: 651000003363349627}
   - component: {fileID: 5608858953238585434}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ShootingSpinningEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,8 +258,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -16.77, y: 9.31, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6639733719341631136}
   m_Father: {fileID: 0}
@@ -330,13 +330,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   rotationSpeed: 1000
+  originalSpeed: 1
+  originalRotationSpeed: 1000
   maxHealth: 90
-  bulletPrefab: {fileID: 7381863353853774595, guid: 1e841bb1deb24884195dad5833b276da, type: 3}
+  currentHealth: 0
+  bulletPrefab: {fileID: 7011228321730538125, guid: aaf6827921b57c949ac409449f36e85b, type: 3}
   firePoint: {fileID: 8979221382627194645}
   bulletSpeed: 10
   shootingInterval: 1
   healthBar: {fileID: 8815358502229091669}
-  healthBarOffset: {x: 0, y: 1.5, z: 0}
+  healthBarOffset: {x: 0, y: 0.3, z: 0}
 --- !u!50 &9043215493485891775
 Rigidbody2D:
   serializedVersion: 4
@@ -377,7 +380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chargeBarCanvas: {fileID: 4136469069820133132}
-  offset: {x: 0, y: 1.5, z: 0}
+  offset: {x: 0, y: 0.3, z: 0}
 --- !u!58 &5608858953238585434
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -407,7 +410,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

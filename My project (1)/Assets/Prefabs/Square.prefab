@@ -16,8 +16,8 @@ GameObject:
   - component: {fileID: 5160210411234618765}
   - component: {fileID: 2502170639711952487}
   - component: {fileID: 3624316837538147895}
-  - component: {fileID: 8073717448110126388}
-  m_Layer: 0
+  - component: {fileID: 8856168357365249285}
+  m_Layer: 6
   m_Name: Square
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -33,9 +33,9 @@ Transform:
   m_GameObject: {fileID: 500241234719428557}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.1200857, y: 3.3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 23.95, y: 5.34, z: 0}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3857729698766189608}
   - {fileID: 8567954940067656009}
@@ -181,9 +181,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 437fc5aaed41e7e4b8d14079ed5f512c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalBubblePrefab: {fileID: 0}
-  fireBubblePrefab: {fileID: 0}
-  iceBubblePrefab: {fileID: 0}
+  normalBubblePrefab: {fileID: 8502710543016600380, guid: a37d91798d70e64458a8c3b66a394ea2, type: 3}
+  fireBubblePrefab: {fileID: 1355882586792323597, guid: 0ef1c15871b63114dbf4e33a5454f528, type: 3}
+  iceBubblePrefab: {fileID: 7075661614802742628, guid: 4468270d05936764c916b76edfea6bd7, type: 3}
   gunOffset: {fileID: 8567954940067656009}
   minChargeTime: 0.1
   maxChargeTime: 0.8
@@ -253,7 +253,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!58 &8073717448110126388
+--- !u!58 &8856168357365249285
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -282,7 +282,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -315,8 +315,8 @@ RectTransform:
   m_GameObject: {fileID: 2328383561012467918}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2.63, y: 2.63, z: 2.63}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7119235374687215353}
   - {fileID: 1660403145786890722}
@@ -391,7 +391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1494069813869454678}
-  offset: {x: 0, y: -1, z: 0}
+  offset: {x: 0, y: -0.3, z: 0}
 --- !u!1 &2504244736918658459
 GameObject:
   m_ObjectHideFlags: 0

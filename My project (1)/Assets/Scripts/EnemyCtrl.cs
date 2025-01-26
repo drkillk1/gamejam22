@@ -7,7 +7,7 @@ public class EnemyCtrl : MonoBehaviour
 {
     public float speed;
     public float rotationSpeed;
-    public float maxHealth = 50f; // Maximum health for the enemy
+    public float maxHealth = 50f;
     public float currentHealth;
     public float originalSpeed = 2f;
 
@@ -17,33 +17,37 @@ public class EnemyCtrl : MonoBehaviour
     private PlayerAwarenessController playerAwarenessController;
     private Vector2 targetDirection;
 
-    public float attackDamage = 50f; // Damage the enemy deals to the player
+    public float attackDamage = 50f;
 
-    public Slider healthBar; // Health bar slider attached to the enemy
-    public Vector3 healthBarOffset = new Vector3(0, 1.5f, 0); // Offset for the health bar above the enemy
-    private Quaternion fixedRotation; // Fixed rotation for the health bar
+    public Slider healthBar;
+    public Vector3 healthBarOffset = new Vector3(0, 1.5f, 0);
+    private Quaternion fixedRotation;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         playerAwarenessController = GetComponent<PlayerAwarenessController>();
-        currentHealth = maxHealth; // Initialize enemy health
-        originalSpeed = speed; // Store the original speed
+        currentHealth = maxHealth;
+        originalSpeed = speed;
 
         if (healthBar != null)
         {
             healthBar.maxValue = maxHealth;
             healthBar.value = currentHealth;
-            fixedRotation = healthBar.transform.rotation; // Store the initial rotation
+            fixedRotation = healthBar.transform.rotation;
         }
     }
 
-    void Update()
+    private void Update()
     {
         UpdateTargetDirection();
         RotateTowardsTarget();
-        SetVelocity();
         UpdateHealthBarPosition();
+    }
+
+    private void FixedUpdate()
+    {
+        MoveTowardsTarget();
     }
 
     private void UpdateTargetDirection()
@@ -71,7 +75,7 @@ public class EnemyCtrl : MonoBehaviour
         rb.SetRotation(rotation);
     }
 
-    private void SetVelocity()
+    private void MoveTowardsTarget()
     {
         if (targetDirection == Vector2.zero)
         {
@@ -79,7 +83,31 @@ public class EnemyCtrl : MonoBehaviour
         }
         else
         {
-            rb.velocity = transform.up * speed;
+            rb.velocity = targetDirection.normalized * speed;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // Deal damage to the player
+            PlayerCtrl playerCtrl = collision.gameObject.GetComponent<PlayerCtrl>();
+            if (playerCtrl != null)
+            {
+                playerCtrl.TakeDamage(attackDamage);
+                Debug.Log($"Enemy attacked player! Damage: {attackDamage}");
+            }
+
+            // Destroy the enemy upon collision with the player
+            Destroy(gameObject);
+        }
+
+        // Handle collision with walls
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            Debug.Log("Enemy collided with a wall.");
+            // You can add additional behavior here if needed
         }
     }
 
@@ -87,29 +115,17 @@ public class EnemyCtrl : MonoBehaviour
     {
         if (isFrozen)
         {
-            speed = 0f; // Stop movement
+            speed = 0f;
             Debug.Log("Enemy frozen!");
         }
         else
         {
-            speed = originalSpeed; // Restore original movement speed
+            speed = originalSpeed;
             Debug.Log("Enemy unfrozen!");
         }
     }
 
-    public IEnumerator ApplyFreezeEffect(EnemyCtrl enemy)
-    {
-        Debug.Log("Freezing enemy...");
-        enemy.Freeze(true); // Freeze the enemy
-        Debug.Log($"Waiting for {freezeDuration} seconds...");
-        yield return new WaitForSeconds(freezeDuration); // Wait for freeze duration
-
-        Debug.Log("Unfreezing enemy...");
-        enemy.Freeze(false); // Unfreeze the enemy
-        Debug.Log("Enemy unfrozen!");
-    }
-
-        public void ApplyBurnEffect(float totalDamage, int burnTicks, float tickInterval)
+    public void ApplyBurnEffect(float totalDamage, int burnTicks, float tickInterval)
     {
         StartCoroutine(TakeBurnDamage(totalDamage, burnTicks, tickInterval));
     }
@@ -130,7 +146,7 @@ public class EnemyCtrl : MonoBehaviour
             TakeDamage(damagePerTick);
             Debug.Log($"Burn tick {i + 1}/{burnTicks}: {damagePerTick} damage applied. Current health: {currentHealth}");
 
-            yield return new WaitForSeconds(tickInterval); // Wait for the next tick
+            yield return new WaitForSeconds(tickInterval);
         }
 
         Debug.Log("Burn effect ended.");
@@ -143,7 +159,7 @@ public class EnemyCtrl : MonoBehaviour
 
         if (healthBar != null)
         {
-            healthBar.value = currentHealth; // Update health bar
+            healthBar.value = currentHealth;
         }
 
         if (currentHealth <= 0)
@@ -155,34 +171,14 @@ public class EnemyCtrl : MonoBehaviour
     private void Die()
     {
         Debug.Log("Enemy Died!");
-        Destroy(gameObject); // Destroy the enemy
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            // Deal damage to the player
-            PlayerCtrl playerCtrl = collision.GetComponent<PlayerCtrl>();
-            if (playerCtrl != null)
-            {
-                playerCtrl.TakeDamage(attackDamage);
-                Debug.Log($"Enemy attacked player! Damage: {attackDamage}");
-            }
-
-            // Destroy the enemy upon collision
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 
     private void UpdateHealthBarPosition()
     {
         if (healthBar != null)
         {
-            // Position the health bar above the enemy
             healthBar.transform.position = transform.position + healthBarOffset;
-
-            // Keep the health bar rotation fixed
             healthBar.transform.rotation = fixedRotation;
         }
     }

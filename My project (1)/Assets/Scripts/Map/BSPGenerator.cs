@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
-using Random = UnityEngine.Random;
 
 public class BSPGenerator : MazeFilller
 {
@@ -16,6 +14,8 @@ public class BSPGenerator : MazeFilller
     private int offset = 1;
     [SerializeField]
     private bool randomWalkRooms = false;
+    
+     // Reference to the PrefabPlacer
 
     protected override void RunRandomWalk()
     {
@@ -28,16 +28,17 @@ public class BSPGenerator : MazeFilller
             roomWidth, roomHeight, 0)), minRoomWidth, minRoomHeight);
 
         HashSet<Vector2Int> floorL = new HashSet<Vector2Int>();
-        if(randomWalkRooms)
+        if (randomWalkRooms)
         {
             floorL = CreateRoomsRandomly(roomsList);
         }
-        else{
+        else
+        {
             floorL = CreateSimpleRooms(roomsList);
         }
 
         List<Vector2Int> roomCenters = new List<Vector2Int>();
-        foreach(var roomL in roomsList)
+        foreach (var roomL in roomsList)
         {
             roomCenters.Add((Vector2Int)Vector3Int.RoundToInt(roomL.center));
         }
@@ -45,25 +46,46 @@ public class BSPGenerator : MazeFilller
         HashSet<Vector2Int> corridors = ConnectRooms(roomCenters);
         floorL.UnionWith(corridors);
 
+        // Paint the floor and create walls
         tileMapper.PaintFloor(floorL);
         WallGenerator.CreateWalls(floorL, tileMapper);
 
+        ItemPlacementHelper placementHelper = new ItemPlacementHelper(floorL, corridors);
+        if (placementHelper == null)
+        {
+            
+            Debug.LogError("ItemPlacementHelper failed to initialize.");
+        }
+
+        PrefabPlacer prefabPlacer = GetComponent<PrefabPlacer>();
+
+        // Pass the floor data to PrefabPlacer
+        if (prefabPlacer != null)
+        {
+            Debug.Log("Placing prefabs in the generated maze...");
+            prefabPlacer.SetItemPlacementHelper(placementHelper);
+            prefabPlacer.PlacePrefabs(floorL, corridors); // Use the generated floor and corridor data
+        }
+        else
+        {
+            Debug.LogWarning("PrefabPlacer is not assigned in the BSPGenerator!");
+        }
     }
 
     private HashSet<Vector2Int> CreateRoomsRandomly(List<BoundsInt> roomsList)
     {
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
         
-        for(int i = 0; i < roomsList.Count; i++)
+        for (int i = 0; i < roomsList.Count; i++)
         {
             var roomBounds = roomsList[i];
             var roomCenter = new Vector2Int(Mathf.RoundToInt(roomBounds.center.x), Mathf.RoundToInt(roomBounds.center.y));
             var roomFloor = Walk(mapParms, roomCenter);
             
-            foreach(var pos in roomFloor)
+            foreach (var pos in roomFloor)
             {
-                if(pos.x >= (roomBounds.xMin + offset) && pos.x <= (roomBounds.xMax-offset) &&
-                pos.y >= (roomBounds.yMin + offset) && pos.y <= (roomBounds.yMax-offset))
+                if (pos.x >= (roomBounds.xMin + offset) && pos.x <= (roomBounds.xMax - offset) &&
+                    pos.y >= (roomBounds.yMin + offset) && pos.y <= (roomBounds.yMax - offset))
                 {
                     floor.Add(pos);
                 }
@@ -75,13 +97,13 @@ public class BSPGenerator : MazeFilller
     private HashSet<Vector2Int> ConnectRooms(List<Vector2Int> roomCenters)
     {
         HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
-        var curRoomCenter = roomCenters[Random.Range(0, roomCenters.Count)];
+        var curRoomCenter = roomCenters[UnityEngine.Random.Range(0, roomCenters.Count)];
 
-        while(roomCenters.Count > 0)
+        while (roomCenters.Count > 0)
         {
             Vector2Int closest = FindClosestPointTo(curRoomCenter, roomCenters);
             roomCenters.Remove(closest);
-            HashSet<Vector2Int> newCorridor = CreateCorridor(curRoomCenter,closest);
+            HashSet<Vector2Int> newCorridor = CreateCorridor(curRoomCenter, closest);
             curRoomCenter = closest;
             corridors.UnionWith(newCorridor);
         }
@@ -90,18 +112,18 @@ public class BSPGenerator : MazeFilller
 
     private Vector2Int FindClosestPointTo(Vector2Int curRoomCenter, List<Vector2Int> roomCenters)
     {
-        Vector2Int closet = Vector2Int.zero;
+        Vector2Int closest = Vector2Int.zero;
         float distance = float.MaxValue;
-        foreach(var pos in roomCenters)
+        foreach (var pos in roomCenters)
         {
             float curDistance = Vector2.Distance(pos, curRoomCenter);
-            if(curDistance < distance)
+            if (curDistance < distance)
             {
                 distance = curDistance;
-                closet = pos; 
+                closest = pos; 
             }
         }
-        return closet;
+        return closest;
     }
 
     private HashSet<Vector2Int> CreateCorridor(Vector2Int curRoomCenter, Vector2Int destination)
@@ -109,25 +131,25 @@ public class BSPGenerator : MazeFilller
         HashSet<Vector2Int> corridor = new HashSet<Vector2Int>();
         var pos = curRoomCenter;
         corridor.Add(pos);
-        while(pos.y != destination.y)
+        while (pos.y != destination.y)
         {
-            if(destination.y > pos.y)
+            if (destination.y > pos.y)
             {
                 pos += Vector2Int.up;
             }
-            if(destination.y < pos.y)
+            if (destination.y < pos.y)
             {
                 pos += Vector2Int.down;
             }
             corridor.Add(pos);
         }
-        while(pos.x != destination.x)
+        while (pos.x != destination.x)
         {
-            if(destination.x > pos.x)
+            if (destination.x > pos.x)
             {
                 pos += Vector2Int.right;
             }
-            if(destination.x < pos.x)
+            if (destination.x < pos.x)
             {
                 pos += Vector2Int.left;
             }
@@ -140,11 +162,11 @@ public class BSPGenerator : MazeFilller
     private HashSet<Vector2Int> CreateSimpleRooms(List<BoundsInt> roomsList)
     {
         HashSet<Vector2Int> floorL = new HashSet<Vector2Int>();
-        foreach(var roomL in roomsList)
+        foreach (var roomL in roomsList)
         {
-            for(int col = offset; col < roomL.size.x - offset; col++)
+            for (int col = offset; col < roomL.size.x - offset; col++)
             {
-                for(int row = offset; row < roomL.size.y - offset; row++)
+                for (int row = offset; row < roomL.size.y - offset; row++)
                 {
                     Vector2Int pos = (Vector2Int)roomL.min + new Vector2Int(col, row);
                     floorL.Add(pos);

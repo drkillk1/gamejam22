@@ -157,7 +157,7 @@ public class PlayerShoot : MonoBehaviour
         float bulletSize = Mathf.Lerp(initialBulletSize, bulletSizeMultiplier, Mathf.Pow(chargeRatio, 2)); // Exponential growth
 
         // Set the size of the bullet
-        currentBubble.transform.localScale = Vector3.one * bulletSize;
+        currentBubble.transform.localScale = (Vector3.one * bulletSize) * .15f;
 
         // Check if the bullet reaches maximum size
         if (chargeTime >= maxChargeTime)

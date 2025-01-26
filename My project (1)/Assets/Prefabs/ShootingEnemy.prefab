@@ -10,12 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1920644082049897314}
   - component: {fileID: 3830011625615781841}
-  - component: {fileID: 7774053688715417272}
   - component: {fileID: 6216171700477374688}
   - component: {fileID: 4289848874323297378}
   - component: {fileID: 7538315142678674967}
   - component: {fileID: 6770084433583824108}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ShootingEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,8 +31,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.18, y: -7.77, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 328115196171487050}
   m_Father: {fileID: 0}
@@ -90,19 +89,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7774053688715417272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 719639446011747825}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f5341ce7db243249977a4594ee065dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerAwarenessDistance: 5
 --- !u!50 &6216171700477374688
 Rigidbody2D:
   serializedVersion: 4
@@ -159,7 +145,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -178,7 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chargeBarCanvas: {fileID: 7800899219855081297}
-  offset: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0.3, z: 0}
 --- !u!114 &6770084433583824108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,12 +180,14 @@ MonoBehaviour:
   speed: 2
   rotationSpeed: 2000
   maxHealth: 25
-  bulletPrefab: {fileID: 7381863353853774595, guid: 1e841bb1deb24884195dad5833b276da, type: 3}
+  currentHealth: 0
+  originalSpeed: 2
+  bulletPrefab: {fileID: 7011228321730538125, guid: aaf6827921b57c949ac409449f36e85b, type: 3}
   firePoint: {fileID: 1920644082049897314}
   bulletSpeed: 10
   shootingInterval: 2
   healthBar: {fileID: 8135268622836192824}
-  healthBarOffset: {x: 0, y: 1.5, z: 0}
+  healthBarOffset: {x: 0, y: 0.3, z: 0}
 --- !u!1 &2638271063634798261
 GameObject:
   m_ObjectHideFlags: 0
