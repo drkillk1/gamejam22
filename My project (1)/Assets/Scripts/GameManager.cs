@@ -18,9 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject winPanel;
 
-    [SerializeField]
-    BSPGenerator BSPGen;
-
     private void Awake()
     {
         // Ensure that the GameManager persists through scenes
@@ -143,15 +140,6 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("WinScreen found!");
                     winPanel.SetActive(false);
-                }
-            }
-
-            if(BSPGen == null)
-            {
-                BSPGen = GameObject.Find("Square")?.GetComponent<BSPGenerator>(); 
-                if(BSPGen != null)
-                {
-                    BSPGen.GetComponent<BSPGenerator>().GenerateMaze();
                 }
             }
         }
