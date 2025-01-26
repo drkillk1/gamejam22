@@ -1102,6 +1102,10 @@ PrefabInstance:
       propertyPath: originalSpeed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7774053688715417272, guid: 6870093d3c8a7544a8afbb24bd43a38c, type: 3}
+      propertyPath: playerAwarenessDistance
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
