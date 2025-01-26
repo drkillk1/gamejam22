@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
@@ -27,7 +28,13 @@ public class BSPGenerator : MazeFilller
             roomWidth, roomHeight, 0)), minRoomWidth, minRoomHeight);
 
         HashSet<Vector2Int> floorL = new HashSet<Vector2Int>();
-        floorL = CreateSimpleRooms(roomsList);
+        if(randomWalkRooms)
+        {
+            floorL = CreateRoomsRandomly(roomsList);
+        }
+        else{
+            floorL = CreateSimpleRooms(roomsList);
+        }
 
         List<Vector2Int> roomCenters = new List<Vector2Int>();
         foreach(var roomL in roomsList)
@@ -41,6 +48,28 @@ public class BSPGenerator : MazeFilller
         tileMapper.PaintFloor(floorL);
         WallGenerator.CreateWalls(floorL, tileMapper);
 
+    }
+
+    private HashSet<Vector2Int> CreateRoomsRandomly(List<BoundsInt> roomsList)
+    {
+        HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
+        
+        for(int i = 0; i < roomsList.Count; i++)
+        {
+            var roomBounds = roomsList[i];
+            var roomCenter = new Vector2Int(Mathf.RoundToInt(roomBounds.center.x), Mathf.RoundToInt(roomBounds.center.y));
+            var roomFloor = Walk(mapParms, roomCenter);
+            
+            foreach(var pos in roomFloor)
+            {
+                if(pos.x >= (roomBounds.xMin + offset) && pos.x <= (roomBounds.xMax-offset) &&
+                pos.y >= (roomBounds.yMin + offset) && pos.y <= (roomBounds.yMax-offset))
+                {
+                    floor.Add(pos);
+                }
+            }
+        }
+        return floor;
     }
 
     private HashSet<Vector2Int> ConnectRooms(List<Vector2Int> roomCenters)

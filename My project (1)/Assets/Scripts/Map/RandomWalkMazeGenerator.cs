@@ -111,6 +111,26 @@ public static class CardDirections
         new Vector2Int(0, -1) //Down
     };
 
+    public static List<Vector2Int> diagonalDirectionList = new List<Vector2Int>
+    {
+        new Vector2Int(1, 1), //Up-Right
+        new Vector2Int(1, -1), //Down-Right
+        new Vector2Int(-1, -1), //Down-Left
+        new Vector2Int(-1, 1) //Up-Left
+    };
+
+    public static List<Vector2Int> eightDirectionList = new List<Vector2Int>
+    {
+        new Vector2Int(0, 1), //Up
+        new Vector2Int(1, 1), //Up-Right
+        new Vector2Int(1, 0), //Right
+        new Vector2Int(1, -1), //Down-Right
+        new Vector2Int(0, -1), //Down
+        new Vector2Int(-1, -1), //Down-Left
+        new Vector2Int(-1, 0), //Left
+        new Vector2Int(-1, 1) //Up-Left
+    };
+
     public static Vector2Int GetRandDir()
     {
         return cardDirectionList[Random.Range(0, cardDirectionList.Count)];

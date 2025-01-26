@@ -7,6 +7,7 @@ using UnityEditor.Experimental.GraphView;
 
 public class CorridorFirstMazeGen : MazeFilller
 {
+    [Header("Parms")]
     [SerializeField]
     private int corridorLen = 10;
     [SerializeField]
@@ -14,6 +15,16 @@ public class CorridorFirstMazeGen : MazeFilller
     [SerializeField]
     [Range(0.1f, 1)]
     private float roomPercent = 0.8f;
+
+    [SerializeField]
+    private List<Color> roomColors = new List<Color>();
+    [SerializeField]
+    private bool showRoomGizmo = false, showCorridorsGizmo;
+
+    [Header("Data")]
+    [SerializeField]
+    private Dictionary<Vector2Int, HashSet<Vector2Int>> roomsDictionary = new Dictionary<Vector2Int,HashSet<Vector2Int>>();
+    private HashSet<Vector2Int> floorPositions, corridorPositions;
 
     protected override void RunRandomWalk()
     {
@@ -80,14 +91,28 @@ public class CorridorFirstMazeGen : MazeFilller
         int numRooms = Mathf.RoundToInt(potentialRoomPositions.Count * roomPercent);
 
         List<Vector2Int> roomsToCreate = potentialRoomPositions.OrderBy(x => Guid.NewGuid()).Take(numRooms).ToList();
-
+        ClearRoomData();
         foreach(var roomPos in roomsToCreate)
         {
             var roomFloor = Walk(mapParms, roomPos);
+
+            SaveRoomData(roomPos, roomFloor);
             roomPositions.UnionWith(roomFloor);
         }
 
         return roomPositions;
+    }
+
+    private void ClearRoomData()
+    {
+        roomsDictionary.Clear();
+        roomColors.Clear();
+    }
+
+    private void SaveRoomData(Vector2Int roomPos, HashSet<Vector2Int> roomFloor)
+    {
+        roomsDictionary[roomPos] = roomFloor;
+        roomColors.Add(UnityEngine.Random.ColorHSV());
     }
 
     private void CreateCorridors(HashSet<Vector2Int> floorPositions, HashSet<Vector2Int> potentialRoomPositions)
@@ -101,6 +126,7 @@ public class CorridorFirstMazeGen : MazeFilller
             potentialRoomPositions.Add(curPos);
             floorPositions.UnionWith(corridor);
         }
+        corridorPositions = new HashSet<Vector2Int>(floorPositions);
 
     }
 }
