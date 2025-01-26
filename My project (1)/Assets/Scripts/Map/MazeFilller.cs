@@ -31,8 +31,10 @@ public class MazeFilller : AbstractMazeGenerator
 
         // Place prefabs (items and enemies)
         PrefabPlacer prefabPlacer = GetComponent<PrefabPlacer>();
+        
         if (prefabPlacer != null)
         {
+            Debug.LogError("ItemPlacementHelper failed to initialize.");
             prefabPlacer.PlacePrefabs(floorPositions, noCorridorPositions);
         }
         //new
