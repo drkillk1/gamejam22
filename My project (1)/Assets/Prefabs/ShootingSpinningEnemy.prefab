@@ -239,8 +239,8 @@ GameObject:
   - component: {fileID: 428709285210635384}
   - component: {fileID: 5202434412699400644}
   - component: {fileID: 9043215493485891775}
-  - component: {fileID: 5940728552047595447}
   - component: {fileID: 651000003363349627}
+  - component: {fileID: 5608858953238585434}
   m_Layer: 0
   m_Name: ShootingSpinningEnemy
   m_TagString: Untagged
@@ -257,7 +257,7 @@ Transform:
   m_GameObject: {fileID: 5681739130653969006}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.8243923, y: 2.7690663, z: 0}
+  m_LocalPosition: {x: -16.77, y: 9.31, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -305,7 +305,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fd2b5a6b515861c4f980ebd7b7fdaad0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   rotationSpeed: 1000
-  maxHealth: 50
+  maxHealth: 90
   bulletPrefab: {fileID: 7381863353853774595, guid: 1e841bb1deb24884195dad5833b276da, type: 3}
   firePoint: {fileID: 8979221382627194645}
   bulletSpeed: 10
@@ -364,7 +364,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &5940728552047595447
+--- !u!114 &651000003363349627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5681739130653969006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7904530cb1cc204e807635a3c0cbca1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chargeBarCanvas: {fileID: 4136469069820133132}
+  offset: {x: 0, y: 1.5, z: 0}
+--- !u!58 &5608858953238585434
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -398,21 +412,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
---- !u!114 &651000003363349627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5681739130653969006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7904530cb1cc204e807635a3c0cbca1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chargeBarCanvas: {fileID: 4136469069820133132}
-  offset: {x: 0, y: 1.5, z: 0}
+  m_Radius: 1.28
 --- !u!1 &6796844868299195355
 GameObject:
   m_ObjectHideFlags: 0
