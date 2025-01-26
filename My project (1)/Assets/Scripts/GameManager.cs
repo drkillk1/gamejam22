@@ -18,6 +18,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject winPanel;
 
+    [SerializeField]
+    BSPGenerator BSPGen;
+
+
     private void Awake()
     {
         // Ensure that the GameManager persists through scenes
@@ -142,6 +146,9 @@ public class GameManager : MonoBehaviour
                     winPanel.SetActive(false);
                 }
             }
+
+            BSPGen = GameObject.Find("BPSGenerator")?.GetComponent<BSPGenerator>();
+            BSPGen.GenerateMaze();
         }
         
     }
