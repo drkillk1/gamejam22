@@ -402,8 +402,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1008333621}
-        m_TargetAssemblyTypeName: MazeFilller, Assembly-CSharp
-        m_MethodName: RunRandomWalk
+        m_TargetAssemblyTypeName: AbstractMazeGenerator, Assembly-CSharp
+        m_MethodName: GenerateMaze
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -998,11 +998,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da00b57f25ca4a9d89f2bd80b8bf998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileMapper: {fileID: 1938470866}
   start: {x: 0, y: 0}
   walkLen: 50
   iterations: 50
   isRandom: 0
-  tileMapper: {fileID: 1938470866}
 --- !u!4 &1008333622
 Transform:
   m_ObjectHideFlags: 0
