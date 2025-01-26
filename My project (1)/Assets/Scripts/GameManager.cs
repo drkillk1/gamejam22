@@ -79,25 +79,8 @@ public class GameManager : MonoBehaviour
             Debug.Log(player.currentHealth);
             if(player.currentHealth <= 0)
             {
-                
-                // losePanel = GameObject.Find("LoseScreen")?.gameObject;
-                // losePanel.SetActive(true);
+                losePanel.SetActive(true);
 
-                if (losePanel == null) // Only find it if it's not already cached
-                {
-                    Transform canvas = GameObject.Find("Canvas")?.transform;
-
-                    if (canvas != null)
-                    {
-                        losePanel = canvas.Find("LoseScreen")?.gameObject; // Finds inactive children
-                    }
-
-                    if (losePanel == null)
-                    {
-                        Debug.LogError("LoseScreen not found under Canvas!");
-                        return;
-                    }
-                }
             }
         }
         
@@ -141,22 +124,38 @@ public class GameManager : MonoBehaviour
         {
             player = GameObject.Find("Square")?.GetComponent<PlayerCtrl>();
 
-            // Cache the LoseScreen reference
-            Transform canvas = GameObject.Find("Canvas")?.transform;
-            if (canvas != null)
+            if (losePanel == null)
             {
-                Transform loseScreenTransform = canvas.Find("LoseScreen");
-                if (loseScreenTransform != null)
+                losePanel = FindInactiveObjectByName("LoseScreen");
+                if (losePanel != null)
                 {
-                    losePanel = loseScreenTransform.gameObject;
+                    Debug.Log("LoseScreen found!");
+                    losePanel.SetActive(false);
                 }
-                else
+            }
+            if (winPanel == null)
+            {
+                winPanel = FindInactiveObjectByName("WinScreen");
+                if (winPanel != null)
                 {
-                    Debug.LogError("LoseScreen not found under Canvas!");
+                    Debug.Log("WinScreen found!");
+                    winPanel.SetActive(false);
                 }
             }
         }
         
+    }
+
+    private GameObject FindInactiveObjectByName(string name)
+    {
+        foreach (GameObject go in Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[])
+        {
+            if (go.hideFlags == HideFlags.None && go.name == name)
+            {
+                return go;
+            }
+        }
+        return null;
     }
 
     public void Play()
