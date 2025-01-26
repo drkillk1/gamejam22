@@ -337,7 +337,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7011228321730538125, guid: aaf6827921b57c949ac409449f36e85b, type: 3}
   firePoint: {fileID: 8979221382627194645}
   bulletSpeed: 10
-  shootingInterval: 0.5
+  shootingInterval: 0.2
   healthBar: {fileID: 8815358502229091669}
   healthBarOffset: {x: 0, y: 0.3, z: 0}
 --- !u!50 &9043215493485891775
