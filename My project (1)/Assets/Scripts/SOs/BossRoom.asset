@@ -22,7 +22,4 @@ MonoBehaviour:
   - prefab: {fileID: 719639446011747825, guid: 6870093d3c8a7544a8afbb24bd43a38c, type: 3}
     quantity: 5
     size: {x: 1, y: 1}
-  items:
-  - prefab: {fileID: 3916918064224941024, guid: df7f9ce3938a5fd43b94e02eb36f7896, type: 3}
-    quantity: 5
-    size: {x: 1, y: 1}
+  items: []

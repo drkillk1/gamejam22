@@ -8,8 +8,6 @@ public class PrefabPlacer : MonoBehaviour
     private ItemPlacementHelper itemPlacementHelper; // Helper for finding placement positions
     private List<GameObject> spawnedEnemies = new List<GameObject>(); // Track spawned enemies
 
-    private List<GameObject> spawnedItems = new List<GameObject>();
-
     /// <summary>
     /// Places prefabs (items and enemies) on the generated maze.
     /// </summary>
@@ -48,11 +46,10 @@ public class PrefabPlacer : MonoBehaviour
 
         // Delete previously spawned enemies
         DeleteSpawnedEnemies();
-        DeleteSpawnedItems();
 
         // Attempt to place enemies and items
         PlacePrefabsOfType(spawnablePrefab.enemies, roomFloor, noCorridor, "Enemies", true);
-        PlacePrefabsOfType(spawnablePrefab.items, roomFloor, noCorridor, "Items", true);
+        PlacePrefabsOfType(spawnablePrefab.items, roomFloor, noCorridor, "Items", false);
     }
 
     /// <summary>
@@ -134,33 +131,6 @@ public class PrefabPlacer : MonoBehaviour
         else
         {
             Debug.Log("No previously spawned enemies to delete.");
-        }
-    }
-    private void DeleteSpawnedItems()
-    {
-        if (spawnedItems.Count > 0)
-        {
-            Debug.Log($"Deleting {spawnedItems.Count} previously spawned enemies.");
-            foreach (var item in spawnedItems)
-            {
-                if (item != null)
-                {
-                    // Use DestroyImmediate in the Editor and Destroy during Play mode
-                    if (Application.isPlaying)
-                    {
-                        Destroy(item);
-                    }
-                    else
-                    {
-                        DestroyImmediate(item);
-                    }
-                }
-            }
-            spawnedItems.Clear();
-        }
-        else
-        {
-            Debug.Log("No previously spawned items to delete.");
         }
     }
 
