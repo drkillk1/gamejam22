@@ -28,7 +28,7 @@ public class EnemyBullet : MonoBehaviour
         // Ignore collision with walls or other objects
         else if (collision.CompareTag("Wall"))
         {
-            Debug.Log("Bullet hit the wall and is destroyed.");
+            // Debug.Log("Bullet hit the wall and is destroyed.");
             Destroy(gameObject);
         }
     }

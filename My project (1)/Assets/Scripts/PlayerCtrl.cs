@@ -10,7 +10,7 @@ public class PlayerCtrl : MonoBehaviour
     public AbilityType currentAbility = AbilityType.Normal;
 
     public float maxHealth = 100f;
-    private float currentHealth;
+    public float currentHealth;
 
     Rigidbody2D rb;
     private Vector2 movementInput;
