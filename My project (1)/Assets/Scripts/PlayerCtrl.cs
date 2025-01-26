@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    
+    public float maxHealth = 100f;
+    private float currentHealth;
+
     Rigidbody2D rb;
     private Vector2 movementInput;
     private Vector2 smoothedMovementInput;
@@ -15,21 +18,24 @@ public class PlayerCtrl : MonoBehaviour
     private float rotationSpeed;
     public float speed;
 
-    
+    public Slider playerHealthBar; // Player health bar slider
 
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        
+        currentHealth = maxHealth; // Initialize player health
+
+        if (playerHealthBar != null)
+        {
+            playerHealthBar.maxValue = maxHealth;
+            playerHealthBar.value = currentHealth;
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         SetPlayerVelocity();
         RotateInDirectionOfCursor();
-
     }
 
     private void SetPlayerVelocity()
@@ -59,7 +65,26 @@ public class PlayerCtrl : MonoBehaviour
     {
         movementInput = inputValue.Get<Vector2>();
     }
-    
-    
-    
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        Debug.Log($"Player Health: {currentHealth}");
+
+        if (playerHealthBar != null)
+        {
+            playerHealthBar.value = currentHealth; // Update health bar
+        }
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("Player Died!");
+        // Implement respawn or game over logic here
+    }
 }
