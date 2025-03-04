@@ -6,94 +6,96 @@ using UnityEngine;
 
 public class ItemPlacementHelper
 {
+    private HashSet<Vector2Int> occupiedTiles = new HashSet<Vector2Int>();
     Dictionary<PlacementType, HashSet<Vector2Int>> tileByType = new Dictionary<PlacementType, HashSet<Vector2Int>>();
+    HashSet<Vector2Int> roomFloorNoCorridor; // Ensure rooms are separated from corridors
 
-    HashSet<Vector2Int> roomFloorNoCorridor;
-
-    public ItemPlacementHelper(HashSet<Vector2Int> roomFloor, HashSet<Vector2Int> roomFloorNoCorridor)
+    public ItemPlacementHelper(HashSet<Vector2Int> roomFloor, HashSet<Vector2Int> corridors)
     {
         Graph graph = new Graph(roomFloor);
-        this.roomFloorNoCorridor = roomFloorNoCorridor;
+        roomFloorNoCorridor = new HashSet<Vector2Int>(roomFloor.Except(corridors)); // Exclude corridors
 
-        foreach(var position in roomFloorNoCorridor)
+        foreach (var position in roomFloorNoCorridor)
         {
             int neighboursCount8Dir = graph.GetNeighbours8Directions(position).Count;
             PlacementType type = neighboursCount8Dir < 8 ? PlacementType.NearWall : PlacementType.OpenSpace;
-            if(tileByType.ContainsKey(type) == false)
-            {
-                tileByType[type] = new HashSet<Vector2Int>();
-            }
 
-            if(type == PlacementType.NearWall && graph.GetNeighbours4Directions(position).Count < 0)
-            {
-                continue;
-            }
+            if (!tileByType.ContainsKey(type))
+                tileByType[type] = new HashSet<Vector2Int>();
+
             tileByType[type].Add(position);
         }
+
+        Debug.Log($"ItemPlacementHelper initialized. Room tiles: {roomFloorNoCorridor.Count}, OpenSpace: {tileByType.GetValueOrDefault(PlacementType.OpenSpace)?.Count ?? 0}");
     }
 
     public Vector2? GetItemPlacementPosition(PlacementType placementType, int iterationsMax, Vector2Int size, bool addOffset)
     {
-        Debug.Log($"Attempting to find position for item of size {size} in {tileByType[placementType].Count} tiles.");
-        int itemArea = size.x * size.y;
-        if(tileByType[placementType].Count < itemArea)
+        if (!tileByType.ContainsKey(placementType) || tileByType[placementType].Count == 0)
         {
+            Debug.LogWarning($"No valid positions found for {placementType}. Trying fallback.");
             return null;
         }
 
         int iteration = 0;
-        while(iteration < iterationsMax)
+        while (iteration < iterationsMax)
         {
             iteration++;
-            int index = UnityEngine.Random.Range(0, tileByType[placementType].Count);
+            int count = tileByType[placementType].Count;
+            if (count == 0) return null; // Prevent out-of-range errors
+
+            int index = UnityEngine.Random.Range(0, count);
             Vector2Int position = tileByType[placementType].ElementAt(index);
 
-            if(itemArea > 1)
+            // Ensure the tile is not already occupied
+            if (occupiedTiles.Contains(position))
             {
-                var (result, placementPositions) = PlaceBigItem(position, size, addOffset);
-                
-                if(result == false)
-                {
-                    continue;
-                }
-                tileByType[placementType].ExceptWith(placementPositions);
-                tileByType[PlacementType.NearWall].ExceptWith(placementPositions);
+                continue; // Skip this position and try again
             }
-            else{
-                tileByType[placementType].Remove(position);
-            }
+
+            // Mark the tile as occupied
+            occupiedTiles.Add(position);
+
             return position;
         }
+
         return null;
     }
 
     private (bool result, IEnumerable<Vector2Int> placementPositions) PlaceBigItem(Vector2Int originPosition, Vector2Int size, bool addOffset)
     {
-        List<Vector2Int> positions = new List<Vector2Int>() {originPosition};
+        List<Vector2Int> positions = new List<Vector2Int>() { originPosition };
         int maxX = addOffset ? size.x + 1 : size.x;
         int maxY = addOffset ? size.y + 1 : size.y;
         int minX = addOffset ? -1 : 0;
         int minY = addOffset ? -1 : 0;
 
-        for(int row = minX; row <= maxX; row++)
+        int validTiles = 0;
+        for (int row = minX; row <= maxX; row++)
         {
-            for(int col = minY; col <= maxY; col++)
+            for (int col = minY; col <= maxY; col++)
             {
-                if(col == 0 && row == 0)
-                {
-                    continue;
-                }
+                if (col == 0 && row == 0) continue;
+                
                 Vector2Int newPosToCheck = new Vector2Int(originPosition.x + row, originPosition.y + col);
-                if(roomFloorNoCorridor.Contains(newPosToCheck) == false)
+
+                // Instead of failing entirely, count valid tiles
+                if (roomFloorNoCorridor.Contains(newPosToCheck))
                 {
-                    return (false, positions);
+                    validTiles++;
+                    positions.Add(newPosToCheck);
                 }
             }
         }
-        return (true, positions);
+
+        // Allow placement if at least 75% of the tiles are valid
+        if (validTiles >= (size.x * size.y * 0.75f))
+            return (true, positions);
+
+        return (false, positions);
     }
 
-    public enum PlacementType
+        public enum PlacementType
     {
         OpenSpace,
         NearWall

@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PrefabPlacer : MonoBehaviour
 {
     
-    [SerializeField] private SpawnablePrefab spawnablePrefab; // ScriptableObject containing enemies and items
+    [SerializeField] public SpawnablePrefab spawnablePrefab; // ScriptableObject containing enemies and items
     private ItemPlacementHelper itemPlacementHelper; // Helper for finding placement positions
     private List<GameObject> spawnedEnemies = new List<GameObject>(); // Track spawned enemies
+    private List<GameObject> spawnedItems = new List<GameObject>();
 
     /// <summary>
     /// Places prefabs (items and enemies) on the generated maze.
@@ -45,59 +47,48 @@ public class PrefabPlacer : MonoBehaviour
         }
 
         // Delete previously spawned enemies
-        DeleteSpawnedEnemies();
+        // DeleteSpawnedEnemies();
+        // DeleteSpawnedItems();
 
         // Attempt to place enemies and items
         PlacePrefabsOfType(spawnablePrefab.enemies, roomFloor, noCorridor, "Enemies", true);
-        PlacePrefabsOfType(spawnablePrefab.items, roomFloor, noCorridor, "Items", false);
+        PlacePrefabsOfType(spawnablePrefab.items, roomFloor, noCorridor, "Items", true);
     }
 
-    /// <summary>
-    /// Places a specific type of prefab (either enemies or items).
-    /// </summary>
-    /// <param name="entries">Array of prefab entries to place.</param>
-    /// <param name="roomFloor">The set of room floor positions (all walkable tiles).</param>
-    /// <param name="noCorridor">The set of room positions excluding corridors.</param>
-    /// <param name="typeName">The type name for debug logs (e.g., "Enemies" or "Items").</param>
-    /// <param name="trackSpawnedObjects">Whether to track the spawned objects for later deletion.</param>
     private void PlacePrefabsOfType(SpawnablePrefab.PrefabEntry[] entries, HashSet<Vector2Int> roomFloor, HashSet<Vector2Int> noCorridor, string typeName, bool trackSpawnedObjects)
     {
-        if (entries == null)
-        {
-            Debug.LogError($"{typeName} entries array is null.");
-            return;
-        }
+        if (entries == null || itemPlacementHelper == null) return;
 
         foreach (var entry in entries)
         {
-            if (entry.prefab == null)
-            {
-                Debug.LogError($"Prefab is null in one of the {typeName} entries. Skipping this entry.");
-                continue;
-            }
+            if (entry.prefab == null) continue;
 
-            Debug.Log($"Placing {entry.quantity} instances of {entry.prefab.name}.");
+            Debug.Log($"Placing {entry.quantity} instances of {entry.prefab.name}");
 
             for (int i = 0; i < entry.quantity; i++)
             {
                 Vector2? position = itemPlacementHelper.GetItemPlacementPosition(
                     ItemPlacementHelper.PlacementType.OpenSpace, 100, entry.size, false);
 
+                if (!position.HasValue)
+                {
+                    Debug.LogWarning($"No valid position found for {entry.prefab.name}. Trying near-wall placement.");
+                    position = itemPlacementHelper.GetItemPlacementPosition(
+                        ItemPlacementHelper.PlacementType.NearWall, 100, entry.size, false);
+                }
+
                 if (position.HasValue)
                 {
                     Vector3 worldPosition = new Vector3(position.Value.x, position.Value.y, 0);
                     GameObject instance = Instantiate(entry.prefab, worldPosition, Quaternion.identity);
-                    Debug.Log($"Spawned {entry.prefab.name} at position {worldPosition}.");
+                    Debug.Log($"Spawned {entry.prefab.name} at {worldPosition}");
 
-                    // Track the spawned enemy for later deletion
-                    if (trackSpawnedObjects)
-                    {
-                        spawnedEnemies.Add(instance);
-                    }
+                    if (trackSpawnedObjects && typeName == "Enemies") spawnedEnemies.Add(instance);
+                    if (trackSpawnedObjects && typeName == "Items") spawnedItems.Add(instance);
                 }
                 else
                 {
-                    Debug.LogWarning($"No valid position found for {entry.prefab.name}. Skipping this instance.");
+                    Debug.LogWarning($"Failed to place {entry.prefab.name} after multiple attempts.");
                 }
             }
         }
@@ -134,6 +125,40 @@ public class PrefabPlacer : MonoBehaviour
         }
     }
 
+    private void DeleteSpawnedItems()
+    {
+        if (spawnedItems.Count > 0)
+        {
+            Debug.Log($"Deleting {spawnedItems.Count} previously spawned items.");
+            foreach (var item in spawnedItems)
+            {
+                if (item != null)
+                {
+                    // Use DestroyImmediate in the Editor and Destroy during Play mode
+                    if (Application.isPlaying)
+                    {
+                        Destroy(item);
+                    }
+                    else
+                    {
+                        DestroyImmediate(item);
+                    }
+                }
+            }
+            spawnedItems.Clear();
+        }
+        else
+        {
+            Debug.Log("No previously spawned items to delete.");
+        }
+    }
+
+    public void ClearPast()
+    {
+        DeleteSpawnedEnemies();
+        DeleteSpawnedItems();
+    }
+
 
     /// <summary>
     /// Sets the ItemPlacementHelper instance.
@@ -149,5 +174,10 @@ public class PrefabPlacer : MonoBehaviour
 
         itemPlacementHelper = helper;
         Debug.Log("ItemPlacementHelper successfully set.");
+    }
+
+    internal object GetItemPlacementHelper()
+    {
+        return itemPlacementHelper;
     }
 }

@@ -17,9 +17,9 @@ MonoBehaviour:
     quantity: 5
     size: {x: 1, y: 1}
   - prefab: {fileID: 2030500957679177512, guid: 09466b66972700147ba14c039b85983e, type: 3}
-    quantity: 5
+    quantity: 0
     size: {x: 1, y: 1}
   - prefab: {fileID: 719639446011747825, guid: 6870093d3c8a7544a8afbb24bd43a38c, type: 3}
-    quantity: 5
+    quantity: 0
     size: {x: 1, y: 1}
   items: []

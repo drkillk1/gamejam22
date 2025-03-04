@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -129,5 +130,58 @@ public class TileMapper : MonoBehaviour
         floor.ClearAllTiles();
         walls.ClearAllTiles();
     }
+
+    public void PaintColoredFloor(Dictionary<BoundsInt, HashSet<Vector2Int>> roomFloors)
+{
+    Dictionary<BoundsInt, Color> roomColors = new Dictionary<BoundsInt, Color>();
+
+    // Generate a unique set of colors for the number of rooms
+    List<Color> uniqueColors = GenerateUniqueColors(roomFloors.Count);
+
+    int colorIndex = 0;
+    foreach (var room in roomFloors.Keys)
+    {
+        roomColors[room] = uniqueColors[colorIndex];
+        colorIndex++;
+    }
+
+    foreach (var room in roomFloors)
+    {
+        Color color = roomColors[room.Key];
+
+        foreach (var tile in room.Value)
+        {
+            PaintTileWithColor(floor, floorTileType, tile, color);
+        }
+    }
+}
+
+private void PaintTileWithColor(Tilemap tilemap, TileBase type, Vector2Int tile, Color color)
+{
+    var tilepos = tilemap.WorldToCell((Vector3Int)tile);
+    tilemap.SetTile(tilepos, type);
+    tilemap.SetColor(tilepos, color); // Set the color of the tile
+}
+
+// Function to generate a unique set of colors
+private List<Color> GenerateUniqueColors(int count)
+{
+    HashSet<Color> colors = new HashSet<Color>();
+
+    while (colors.Count < count)
+    {
+        Color newColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+        
+        // Ensure no two colors are too similar
+        if (!colors.Any(existingColor => Vector3.Distance(
+                new Vector3(existingColor.r, existingColor.g, existingColor.b),
+                new Vector3(newColor.r, newColor.g, newColor.b)) < 0.2f)) 
+        {
+            colors.Add(newColor);
+        }
+    }
+
+    return colors.ToList();
+}
 
 }
