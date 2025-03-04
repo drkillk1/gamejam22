@@ -177,6 +177,13 @@ public class GameManager : MonoBehaviour
         Debug.Log("changed");
     }
     
+    public void ShowStats()
+    {
+        ChangeScene("Stats");
+        Debug.Log("on to stats");
+    }
+
+
     public void ShowCredits()
     {
         ChangeScene("Credits");
