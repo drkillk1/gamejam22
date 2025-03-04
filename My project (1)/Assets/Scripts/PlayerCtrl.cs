@@ -12,6 +12,8 @@ public class PlayerCtrl : MonoBehaviour
     public float maxHealth = 100f;
     public float currentHealth;
 
+    public bool hasKey;
+
     Rigidbody2D rb;
     private Vector2 movementInput;
     private Vector2 smoothedMovementInput;
