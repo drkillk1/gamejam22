@@ -111,6 +111,7 @@ public class GameManager : MonoBehaviour
             // Reassign the buttons dynamically
             Button playButton = GameObject.Find("PlayButton")?.GetComponent<Button>();
             Button instructionsButton = GameObject.Find("InstructionsButton")?.GetComponent<Button>();
+            Button statsButton = GameObject.Find("StatsButton")?.GetComponent<Button>();
             Button creditsButton = GameObject.Find("CreditsButton")?.GetComponent<Button>();
 
             if (playButton != null)
@@ -118,6 +119,9 @@ public class GameManager : MonoBehaviour
 
             if (instructionsButton != null)
                 instructionsButton.onClick.AddListener(ShowInstructions);
+            
+            if (statsButton != null)
+                statsButton.onClick.AddListener(ShowStats);
 
             if (creditsButton != null)
                 creditsButton.onClick.AddListener(ShowCredits);
